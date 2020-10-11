@@ -1,0 +1,48 @@
+library IEEE;
+use IEEE.Std_Logic_1164.all;
+entity aritmetico is
+port (A: in std_logic_vector(2 downto 0);
+ B: in std_logic_vector(2 downto 0);
+ Control: in std_logic_vector(1 downto 0);
+ Out_hex: out std_logic_vector(6 downto 0);
+ Out_bin: out std_logic_vector(3 downto 0)
+ 
+ );
+end aritmetico;
+
+architecture circ of aritmetico is
+ signal F,G,F1,F2,F3,F4: std_logic_vector(3 downto 0);
+ 
+ component sum is
+ port (A: in std_logic_vector(3 downto 0);
+ B: in std_logic_vector(3 downto 0);
+ F: out std_logic_vector(3 downto 0) );
+ end component;
+ 
+ component decoder is
+ port (C: in std_logic_vector(3 downto 0);
+ F: out std_logic_vector(6 downto 0)
+ );
+ end component;
+ component mux4_1 is
+ port (F1,F2,F3,F4: in std_logic_vector(3 downto 0);
+sel: in std_logic_vector(1 downto 0);
+F: out std_logic_vector(3 downto 0)
+);
+end component;
+
+begin
+ F1<= ‘0’ & A; 
+F2<= A & ‘0’; 
+F3<= ‘0’& B; 
+F4<= B & ‘0’;
+
+
+sum: Sum port map(F1,F,G);
+decod: decoder port map (G, Out_hex);
+ multip: mux4_1 port map(F1,F2,F3,F4,Control,F);
+G <= Out_bin;
+
+ 
+ 
+end circ;
